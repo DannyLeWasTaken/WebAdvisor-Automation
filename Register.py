@@ -176,28 +176,32 @@ def microsoft_login(browser):
 def navigate_webadvisor(browser):
     # Microsoft page was detected!
     print("Navigating webadvisor")
+    browser.get(url)
     while True:
         semester_text = WebDriverWait(browser, 10).until(
             EC.presence_of_element_located((By.ID, "schedule-activeterm-text"))
-        )
-        if semester_text.text == "Winter 2024":
+        ).text
+        if semester_text == os.environ.get("TARGET_SEMESTER"):
             break
         try:
             if is_microsoft_login_page(browser.current_url):
                 microsoft_login(browser)
-            browser.get(url)
-            WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
-            WebDriverWait(browser, 10).until(
-                EC.visibility_of_element_located((By.ID, "schedule-next-term"))
-            )
             next_semester = WebDriverWait(browser, 10).until(
                 EC.element_to_be_clickable((By.ID, "schedule-next-term"))
             )
-            time.sleep(4)
             next_semester = WebDriverWait(browser, 10).until(
                 EC.element_to_be_clickable((By.ID, "schedule-next-term"))
             )
             ActionChains(browser).scroll_to_element(next_semester).click(next_semester).perform()
+            WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
+            # wait until course text changes
+            while True:
+                new_semester_text = WebDriverWait(browser, 10).until(
+                    EC.presence_of_element_located((By.ID, "schedule-activeterm-text"))
+                ).text
+                if (semester_text != new_semester_text):
+                    break
+                time.sleep(0.1)
         except Exception:
             time.sleep(4)
             pass
@@ -228,7 +232,7 @@ def is_browser_alive(browser):
 
 
 # Main process - starts 2 minutes before the deadline
-while datetime.datetime.now() < deadline:
+while True:
     # Do some sanity checks first
 
     # Browser no longer exists...?
