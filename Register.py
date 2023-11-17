@@ -175,6 +175,7 @@ def microsoft_login(browser):
 # Navigate to webadvisor
 def navigate_webadvisor(browser):
     # Microsoft page was detected!
+    browser.set_window_size(1024, 768)
     print("Detected page is")
     if is_microsoft_login_page(browser.current_url):
         microsoft_login(browser)
@@ -182,7 +183,6 @@ def navigate_webadvisor(browser):
     next_semester = WebDriverWait(browser, 10).until(
         EC.element_to_be_clickable((By.ID, "schedule-next-term"))
     )
-    browser.execute_script("arguments[0].scrollIntoView(true);", next_semester)
     ActionChains(browser).move_to_element(next_semester).click(next_semester).perform()
 
 # Automated login
