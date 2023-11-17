@@ -183,6 +183,7 @@ def navigate_webadvisor(browser):
     next_semester = WebDriverWait(browser, 10).until(
         EC.element_to_be_clickable((By.ID, "schedule-next-term"))
     )
+    browser.execute_script("arguments[0].scrollIntoView();", next_semester)
     ActionChains(browser).move_to_element(next_semester).click(next_semester).perform()
 
 # Automated login
@@ -242,7 +243,7 @@ while datetime.datetime.now() < deadline:
         # If there exists any pre-existing notification buttons, close them now
         try:
             element = browser.find_element(By.CSS_SELECTOR, 'a.esg-icon__container.esg-notification-center__close')
-            ActionChains(browser).move_to_element(element).click(element)
+            ActionChains(browser).move_to_element(element).click(element).perform()
             element.click()
         except Exception:
             pass
@@ -252,7 +253,7 @@ while datetime.datetime.now() < deadline:
         )
         # Remove disabled attribute
         browser.execute_script("arguments[0].removeAttribute('disabled')", button)
-        ActionChains(browser).scroll_to_element(button).click(button)
+        ActionChains(browser).scroll_to_element(button).click(button).perform
         print("Clicking button")
 
         time_difference = datetime.datetime.now() - start_time
