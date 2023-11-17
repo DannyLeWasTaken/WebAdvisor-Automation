@@ -175,16 +175,22 @@ def microsoft_login(browser):
 # Navigate to webadvisor
 def navigate_webadvisor(browser):
     # Microsoft page was detected!
-    browser.set_window_size(1024, 768)
     print("Detected page is")
     if is_microsoft_login_page(browser.current_url):
         microsoft_login(browser)
     browser.get(url)
+    WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
+    WebDriverWait(browser, 10).until(
+        EC.visibility_of_element_located((By.ID, "schedule-next-term"))
+    )
     next_semester = WebDriverWait(browser, 10).until(
         EC.element_to_be_clickable((By.ID, "schedule-next-term"))
     )
-    browser.execute_script("arguments[0].scrollIntoView();", next_semester)
-    ActionChains(browser).move_to_element(next_semester).click(next_semester).perform()
+    time.sleep(4)
+    next_semester = WebDriverWait(browser, 10).until(
+        EC.element_to_be_clickable((By.ID, "schedule-next-term"))
+    )
+    ActionChains(browser).scroll_to_element(next_semester).click(next_semester).perform()
 
 # Automated login
 def start(browser):
@@ -218,8 +224,6 @@ while datetime.datetime.now() < deadline:
         print("Browser died. Rebooting.")
         try:
             browser = webdriver.Firefox()
-            browser.get(url)
-            WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
             start(browser)
         except Exception as err:
             print(f"Failed to reboot. Trying again in 5 seconds. Error due to: {err}")
@@ -231,8 +235,6 @@ while datetime.datetime.now() < deadline:
     if browser.current_url != url:
         print("Url does not match. Redirecting.")
         try:
-            browser.get(url)
-            WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
             navigate_webadvisor(browser)
             continue;
         except Exception as err:
@@ -243,7 +245,7 @@ while datetime.datetime.now() < deadline:
         # If there exists any pre-existing notification buttons, close them now
         try:
             element = browser.find_element(By.CSS_SELECTOR, 'a.esg-icon__container.esg-notification-center__close')
-            ActionChains(browser).move_to_element(element).click(element).perform()
+            ActionChains(browser).scroll_to_element(element).click(element).perform()
             element.click()
         except Exception:
             pass
