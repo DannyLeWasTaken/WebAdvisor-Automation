@@ -216,7 +216,7 @@ print("Starting loop...")
 start_time = deadline - datetime.timedelta(minutes=2)
 
 # Wait until the start time is reached
-while datetime.datetime.now() < start_time:
+while datetime.datetime.now() - datetime.timedelta(minutes=10) < start_time:
     sync_sleep(10)  # Check every 10 seconds
 
 def is_browser_alive(browser):
