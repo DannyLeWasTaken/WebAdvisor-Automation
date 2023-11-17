@@ -76,7 +76,7 @@ def microsoft_login(browser):
     #serve_process = subprocess.Popen(['bw', 'serve'], stdin=subprocess.PIPE, text=True)
     process_holder = []
     def run_bw_serve():
-        proc = subprocess.Popen(['bw', 'serve'], text=True)
+        proc = subprocess.Popen(['bw', 'serve', "--port=8087"], text=True)
         return proc
     
     thread = threading.Thread(target=lambda: process_holder.append(run_bw_serve()))
