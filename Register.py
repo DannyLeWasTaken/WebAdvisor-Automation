@@ -242,6 +242,7 @@ while datetime.datetime.now() < deadline:
         # If there exists any pre-existing notification buttons, close them now
         try:
             element = browser.find_element(By.CSS_SELECTOR, 'a.esg-icon__container.esg-notification-center__close')
+            ActionChains(browser).move_to_element(element).click(element)
             element.click()
         except Exception:
             pass
@@ -251,9 +252,7 @@ while datetime.datetime.now() < deadline:
         )
         # Remove disabled attribute
         browser.execute_script("arguments[0].removeAttribute('disabled')", button)
-        browser.execute_script("arguments[0].scrollIntoView(true);", button)
-        # Click button
-        button.click()
+        ActionChains(browser).scroll_to_element(button).click(button)
         print("Clicking button")
 
         time_difference = datetime.datetime.now() - start_time
