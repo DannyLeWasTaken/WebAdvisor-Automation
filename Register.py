@@ -255,7 +255,7 @@ while datetime.datetime.now() < deadline:
         )
         # Remove disabled attribute
         browser.execute_script("arguments[0].removeAttribute('disabled')", button)
-        ActionChains(browser).scroll_to_element(button).click(button).perform
+        ActionChains(browser).scroll_to_element(button).click(button).perform()
         print("Clicking button")
 
         time_difference = datetime.datetime.now() - start_time
