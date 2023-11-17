@@ -274,7 +274,7 @@ while datetime.datetime.now() < deadline:
             time_difference = datetime.datetime.now() - start_time
 
             # Check if we are within 5 minutes before the deadline or up to 1 hour after the deadline
-            if datetime.timedelta(minutes=-5) <= time_difference <= datetime.timedelta(hours=1):
+            if datetime.timedelta(minutes=-2) <= time_difference <= datetime.timedelta(hours=1):
                 sync_sleep(10)  # Within the specified time range, sleep for 10 seconds
             else:
                 sync_sleep(30)  # Outside the specified time range, sleep for 30 seconds
