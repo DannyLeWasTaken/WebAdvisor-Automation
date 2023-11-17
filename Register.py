@@ -5,6 +5,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver import ActionChains
 from dotenv import load_dotenv
 import os
 import subprocess
@@ -181,7 +182,8 @@ def navigate_webadvisor(browser):
     next_semester = WebDriverWait(browser, 10).until(
         EC.element_to_be_clickable((By.ID, "schedule-next-term"))
     )
-    next_semester.click()
+    browser.execute_script("arguments[0].scrollIntoView(true);", next_semester)
+    ActionChains(browser).move_to_element(next_semester).click(next_semester).perform()
 
 # Automated login
 def start(browser):
@@ -192,7 +194,7 @@ start(browser)
 
 print("Starting loop...")
 # Calculate the start time (2 minutes before the deadline)
-start_time = deadline - datetime.timedelta(minutes=200000)
+start_time = deadline - datetime.timedelta(minutes=2)
 
 # Wait until the start time is reached
 while datetime.datetime.now() < start_time:
@@ -249,7 +251,7 @@ while datetime.datetime.now() < deadline:
         )
         # Remove disabled attribute
         browser.execute_script("arguments[0].removeAttribute('disabled')", button)
-
+        browser.execute_script("arguments[0].scrollIntoView(true);", button)
         # Click button
         button.click()
         print("Clicking button")
