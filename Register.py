@@ -175,22 +175,32 @@ def microsoft_login(browser):
 # Navigate to webadvisor
 def navigate_webadvisor(browser):
     # Microsoft page was detected!
-    print("Detected page is")
-    if is_microsoft_login_page(browser.current_url):
-        microsoft_login(browser)
-    browser.get(url)
-    WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
-    WebDriverWait(browser, 10).until(
-        EC.visibility_of_element_located((By.ID, "schedule-next-term"))
-    )
-    next_semester = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable((By.ID, "schedule-next-term"))
-    )
-    time.sleep(4)
-    next_semester = WebDriverWait(browser, 10).until(
-        EC.element_to_be_clickable((By.ID, "schedule-next-term"))
-    )
-    ActionChains(browser).scroll_to_element(next_semester).click(next_semester).perform()
+    print("Navigating webadvisor")
+    while True:
+        semester_text = WebDriverWait(browser, 10).until(
+            EC.presence_of_element_located((By.ID, "schedule-activeterm-text"))
+        )
+        if semester_text.text == "Winter 2024":
+            break
+        try:
+            if is_microsoft_login_page(browser.current_url):
+                microsoft_login(browser)
+            browser.get(url)
+            WebDriverWait(browser, 10).until(lambda d: d.execute_script('return document.readyState') == 'complete')
+            WebDriverWait(browser, 10).until(
+                EC.visibility_of_element_located((By.ID, "schedule-next-term"))
+            )
+            next_semester = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable((By.ID, "schedule-next-term"))
+            )
+            time.sleep(4)
+            next_semester = WebDriverWait(browser, 10).until(
+                EC.element_to_be_clickable((By.ID, "schedule-next-term"))
+            )
+            ActionChains(browser).scroll_to_element(next_semester).click(next_semester).perform()
+        except Exception:
+            time.sleep(4)
+            pass
 
 # Automated login
 def start(browser):
