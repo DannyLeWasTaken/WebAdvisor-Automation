@@ -194,6 +194,7 @@ def navigate_webadvisor(browser):
 
 # Automated login
 def start(browser):
+    browser.get(url)
     microsoft_login(browser)
     navigate_webadvisor(browser)
 
